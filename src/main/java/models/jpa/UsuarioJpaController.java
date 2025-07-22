@@ -60,7 +60,7 @@ public class UsuarioJpaController {
         }
     }
 
-    public Usuario findUsuario(Integer id) {
+    public Usuario findUsuario(Long id) {
         EntityManager em = null;
         try {
             em = emf.createEntityManager();
@@ -95,7 +95,7 @@ public class UsuarioJpaController {
         }
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         EntityManager em = null;
         try {
             em = emf.createEntityManager();

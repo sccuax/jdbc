@@ -30,11 +30,11 @@ public class ControladoraPersistencia {
         usuarioJpa.edit(user);
     }
 
-    public void eliminarUsuario(Integer id) {
+    public void eliminarUsuario(Long id) {
         usuarioJpa.delete(id);
     }
 
-    public Usuario getUsuario(Integer id) {
+    public Usuario getUsuario(Long id) {
         return usuarioJpa.findUsuario(id);
     }
     

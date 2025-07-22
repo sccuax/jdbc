@@ -24,7 +24,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 
     if (action == null || action.isEmpty()) {
         // Aquí rediriges a la acción "list" por defecto
-        response.sendRedirect("UsuarioServlet?action=list"); // Ajusta el nombre del servlet
+        response.sendRedirect("UsuarioServlet?action=list"); 
         return;
     }
 
@@ -65,7 +65,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 
             controladora.guardarUsuario(nombre, correo, telefono);
         } else if (action.equals("update")) {
-            Integer id = Integer.parseInt(request.getParameter("id"));
+            long id = Long.parseLong(request.getParameter("id"));
             String nombre = request.getParameter("nombre");
             String correo = request.getParameter("correo");
             String telefono = request.getParameter("telefono");
@@ -112,9 +112,10 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 
     private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            Integer id = Integer.parseInt(request.getParameter("id"));
+            Long id = Long.parseLong(request.getParameter("id"));
             logger.log(Level.INFO, "Eliminando usuario con ID: {0}", id);
 
+            
             controladora.eliminarUsuario(id);
 
             response.sendRedirect("UsuarioServlet?action=list");
@@ -138,8 +139,6 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 
             request.setAttribute("usuario", usuario);
             List<Usuario> usuarios = controladora.getUsuarios();
-            request.setAttribute("usuarios", usuarios);
-            
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "ID inválido para cargar usuario", e);

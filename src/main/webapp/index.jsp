@@ -1,6 +1,7 @@
 <%@ page import="models.entity.Usuario" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
 <head>
@@ -79,40 +80,49 @@
   </style>
 </head>
 <body>
-    <h2>Usuarios</h2>
-
-    <table border="1">
-        <tr>
-            <th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Acciones</th>
-        </tr>
-
-<%
+    
+    <c:set var="enEdicion" value="${not empty usuario}" />
+    
+    <c:if test="${enEdicion}">
+    <div style="background: #fffae6; padding:10px; margin-bottom:10px; border:1px solid #ffd700;">
+        ⚠️ Estás editando un usuario. Verifica los datos antes de guardar.
+    </div>
+    </c:if>
+    <%
+    Usuario usuarioEditando = (Usuario) request.getAttribute("usuario");
+    boolean enEdicion = (usuarioEditando != null);
     List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
-    if (usuarios != null) {
-        for (Usuario u : usuarios) {
-%>
-        <tr>
-            <td><%= u.getId() %></td>
-            <td><%= u.getNombre() %></td>
-            <td><%= u.getCorreo() %></td>
-            <td><%= u.getTelefono() %></td>
-            <td>
-                <a href="UsuarioServlet?action=edit&id=<%= u.getId() %>">Editar</a> |
-                <a href="UsuarioServlet?action=delete&id=<%= u.getId() %>" onclick="return confirm('¿Estás seguro de eliminar este usuario?');">Eliminar</a>
-            </td>
-        </tr>
-<%
-        }
-    } else {
-%>
-        <tr><td colspan="5">No hay usuarios para mostrar</td></tr>
-<%
-    }
-%>
+    %>
+
+<c:if test="${!enEdicion}">
+    <h2>Usuarios</h2>
+    <table border="1" width="100%">
+        <tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Acciones</th></tr>
+        <c:choose>
+            <c:when test="${not empty usuarios}">
+                <c:forEach var="u" items="${usuarios}">
+                    <tr>
+                        <td>${u.id}</td>
+                        <td>${u.nombre}</td>
+                        <td>${u.correo}</td>
+                        <td>${u.telefono}</td>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/UsuarioServlet?action=edit&id=${u.id}">Editar</a> |
+                            <a href="${pageContext.request.contextPath}/UsuarioServlet?action=delete&id=${u.id}"
+                               onclick="return confirm('¿Eliminar usuario ${u.nombre}?')">Eliminar</a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <tr><td colspan="5">No hay usuarios para mostrar</td></tr>
+            </c:otherwise>
+        </c:choose>
     </table>
+</c:if>
 
     <br><br>
-
+    
     <h3><%= request.getAttribute("usuario") != null ? "Editar usuario" : "Crear nuevo usuario" %></h3>
 
     <form action="${pageContext.request.contextPath}/UsuarioServlet" method="post">
@@ -129,6 +139,9 @@
         Correo: <input type="text" name="correo" value="<%= editando ? usuarioForm.getCorreo() : "" %>"><br>
         Teléfono: <input type="text" name="telefono" value="<%= editando ? usuarioForm.getTelefono() : "" %>"><br>
         <input type="submit" value="<%= editando ? "Actualizar" : "Guardar" %>">
+        <c:if test="${enEdicion}">
+        <a href="${pageContext.request.contextPath}/UsuarioServlet?action=list">Cancelar edición</a>
+    </c:if>
     </form>
 </body>
 </html>
