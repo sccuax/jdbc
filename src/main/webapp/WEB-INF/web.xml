@@ -16,6 +16,7 @@
     </welcome-file-list>
     
 
+    <!-- pagina de inicio definida con el servlet -->
 
     <servlet>
         <servlet-name>UsuarioServlet</servlet-name>

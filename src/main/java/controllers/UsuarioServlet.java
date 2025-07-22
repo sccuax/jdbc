@@ -10,12 +10,15 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
+//path para las actiones del crud
 @WebServlet(name = "UsuarioServlet", urlPatterns = {"/UsuarioServlet"})
 public class UsuarioServlet extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(UsuarioServlet.class.getName());
     private ControladoraPersistencia controladora = new ControladoraPersistencia();
 
+    
+    //metodo para traer la lista de los usuarios desde la base de datos
     @Override
 protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String action = request.getParameter("action");
@@ -44,7 +47,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
     }
 }
 
-
+// metodo para agregar usuarios nuevos a la base de datos
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -86,7 +89,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida en POST");
             return;
         }
-
+        //se redirege a la lista en ves de al index para que aparescan toda la info de los usuarios.
         response.sendRedirect("UsuarioServlet?action=list");
     }
 
@@ -110,12 +113,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
+    //metodo para eliminar usuarios
     private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             Long id = Long.parseLong(request.getParameter("id"));
             logger.log(Level.INFO, "Eliminando usuario con ID: {0}", id);
 
-            
             controladora.eliminarUsuario(id);
 
             response.sendRedirect("UsuarioServlet?action=list");
@@ -125,6 +128,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
         }
     }
 
+    //metodo para cargar el usuario a editar en el form
     private void cargarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             Long id = Long.parseLong(request.getParameter("id"));
